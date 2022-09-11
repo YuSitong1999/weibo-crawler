@@ -52,7 +52,7 @@ class User(UserSummary):
 
 
 class Mblog:
-    def __init__(self, mblog):
+    def __init__(self, mblog, headers: dict[str, str]):
         self.id: int = mblog['id']
         self.mblog_id: str = mblog['mblogid']
         self.text_raw: str = mblog['text_raw']
@@ -66,6 +66,13 @@ class Mblog:
         # 发布时间
         self.created_at: datetime.datetime = datetime.datetime.strptime(mblog['created_at'],
                                                                         '%a %b %d %X %z %Y')
+
+        # 是否长微博
+        self.is_long_text: bool = mblog['isLongText']
+        if self.is_long_text:  # 部分需要登录
+            response = requests.get(f'https://weibo.com/ajax/statuses/longtext?id={self.mblog_id}', headers=headers)
+            data = json.loads(response.text)
+            self.long_text = data['data']['longTextContent']
 
         # 附带图片
         self.has_picture: bool = len(mblog['pic_ids']) != 0
@@ -84,7 +91,7 @@ class Mblog:
         self.is_retweet: bool = 'retweeted_status' in mblog
         if self.is_retweet:
             self.retweet_id: int = mblog['retweeted_status']['id']
-            self.retweet_mblog: Mblog = Mblog(mblog['retweeted_status'])
+            self.retweet_mblog: Mblog = Mblog(mblog['retweeted_status'], headers=headers)
 
 
 class Crawler:
@@ -101,13 +108,14 @@ class Crawler:
             data = json.loads(response.text)
             user = User(data['data']['user'])
             with open(f'{user.id}.json', 'w', encoding='utf-8') as f:
-                json.dump(user, f, cls=MyEncoder, ensure_ascii=False)  #
+                json.dump(user, f, ensure_ascii=False, cls=MyEncoder, indent='    ')  #
             # 抓取用户微博
             i: int = 0
             continue_flag: bool = True
             while continue_flag:
                 i += 1
                 if i % self.config.page_sleep_count == 0:
+                    print(f'休息中 {self.config.page_sleep_duration}')
                     time.sleep(self.config.page_sleep_duration)
 
                 print(f'正在抓取第{i}页')
@@ -118,12 +126,12 @@ class Crawler:
                     continue_flag = False
 
                 for data_mblog in data['data']['list']:
-                    mblog = Mblog(data_mblog)
+                    mblog = Mblog(data_mblog, self.headers)
                     if mblog.created_at < self.config.since_date and not mblog.is_top:
                         continue_flag = False
                         break
                     with open(f'mblog{os.sep}{mblog.id}.json', 'w', encoding='utf-8') as f:
-                        json.dump(mblog, f, cls=MyEncoder, ensure_ascii=False)
+                        json.dump(mblog, f, ensure_ascii=False, cls=MyEncoder, indent='    ')
 
 
 if __name__ == '__main__':
