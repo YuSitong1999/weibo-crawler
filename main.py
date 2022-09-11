@@ -1,5 +1,7 @@
 import json
 import os
+import shutil
+import sys
 import time
 import datetime
 
@@ -141,6 +143,11 @@ class Crawler:
 
 if __name__ == '__main__':
     config_file_path: str = 'config.json'
+    config_simple_file_path: str = 'config_simple.json'
+    if not os.path.isfile(config_file_path):
+        shutil.copy(config_simple_file_path, config_file_path)
+        print(f'请编辑配置文件 {config_file_path} 后再次运行')
+        sys.exit()
     # 读取配置
     with open(config_file_path, encoding='utf-8') as f:
         config_data = json.loads(f.read())
