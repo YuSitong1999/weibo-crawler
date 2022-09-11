@@ -87,8 +87,9 @@ class Mblog:
             url = mblog['pic_infos'][picture_id]['largest']['url']
             self.picture_url_list.append(url)
             response = requests.get(url, headers=headers)
-            os.makedirs('image', exist_ok=True)
-            with open(f'image{os.sep}{picture_id}.jpg', 'wb') as f:
+            # 确保图片文件夹存在
+            os.makedirs(f'output{os.sep}image{os.sep}{mblog["user"]["id"]}', exist_ok=True)
+            with open(f'output{os.sep}image{os.sep}{mblog["user"]["id"]}{os.sep}{picture_id}.jpg', 'wb') as f:
                 f.write(response.content)
         # 附带文章
         self.has_article: bool = 'url_struct' in mblog
@@ -137,8 +138,9 @@ class Crawler:
                     if mblog.created_at < self.config.since_date and not mblog.is_top:
                         continue_flag = False
                         break
-            with open(f'{user.id}.json', 'w', encoding='utf-8') as f:
-                json.dump(user, f, ensure_ascii=False, cls=MyEncoder, indent='    ')  #
+                # 每抓取一页微博就写文件
+                with open(f'output{os.sep}{user.id}.json', 'w', encoding='utf-8') as f:
+                    json.dump(user, f, ensure_ascii=False, cls=MyEncoder, indent='    ')  #
 
 
 if __name__ == '__main__':
@@ -154,5 +156,7 @@ if __name__ == '__main__':
     config = CrawlerConfig(config_data)
     # 创建爬虫
     crawler = Crawler(config)
+    # 确保输出文件夹存在
+    os.makedirs('output', exist_ok=True)
     # 抓取用户信息
     crawler.start()

@@ -3,3 +3,6 @@
 
 # 实际使用的配置
 config.json
+
+# 输出数据
+output
