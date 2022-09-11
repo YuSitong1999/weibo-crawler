@@ -27,13 +27,18 @@ class CrawlerConfig:
             datetime.datetime.strptime(data['since_data'], '%Y-%m-%d'))
 
 
-class User:
+class UserSummary:
     def __init__(self, user):
         self.id: int = user['id']
         # 网名
         self.screen_name: str = user['screen_name']
         # 高清头像
         self.avatar_hd: str = user['avatar_hd']
+
+
+class User(UserSummary):
+    def __init__(self, user):
+        super().__init__(user)
         # 介绍
         self.description: str = user['description']
         # 自称地址
@@ -53,7 +58,7 @@ class Mblog:
         self.text_raw: str = mblog['text_raw']
         self.text: str = mblog['text']
         # 指定、公开……
-        self.title: str = mblog['title']['text']
+        self.title: str = mblog['title']['text'] if 'title' in mblog and 'text' in mblog['title'] else ''
         # 是否置顶
         self.is_top: bool = self.title == '置顶'
         # 发布地
@@ -77,7 +82,9 @@ class Mblog:
                 self.article_url_list.append(article['long_url'])
         # 是否转发
         self.is_retweet: bool = 'retweeted_status' in mblog
-        self.retweet_id: int = mblog['retweeted_status']['id'] if self.is_retweet else 0
+        if self.is_retweet:
+            self.retweet_id: int = mblog['retweeted_status']['id']
+            self.retweet_mblog: Mblog = Mblog(mblog['retweeted_status'])
 
 
 class Crawler:
