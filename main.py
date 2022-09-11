@@ -50,6 +50,8 @@ class User(UserSummary):
         # 微博数
         self.statuses_count: int = user['statuses_count']
 
+        self.mblog_list = list[Mblog]()
+
 
 class Mblog:
     def __init__(self, mblog, headers: dict[str, str]):
@@ -100,15 +102,12 @@ class Crawler:
         self.headers = {'user-agent': config.user_agent, 'cookie': config.cookie}
 
     def start(self):
-        os.makedirs('mblog', exist_ok=True)
         for user_id in self.config.user_id_list:
             # 抓取用户信息
             response = requests.get(f'https://weibo.com/ajax/profile/info?uid={user_id}', headers=self.headers)
             print(response.text)
             data = json.loads(response.text)
             user = User(data['data']['user'])
-            with open(f'{user.id}.json', 'w', encoding='utf-8') as f:
-                json.dump(user, f, ensure_ascii=False, cls=MyEncoder, indent='    ')  #
             # 抓取用户微博
             i: int = 0
             continue_flag: bool = True
@@ -127,11 +126,12 @@ class Crawler:
 
                 for data_mblog in data['data']['list']:
                     mblog = Mblog(data_mblog, self.headers)
+                    user.mblog_list.append(mblog)
                     if mblog.created_at < self.config.since_date and not mblog.is_top:
                         continue_flag = False
                         break
-                    with open(f'mblog{os.sep}{mblog.id}.json', 'w', encoding='utf-8') as f:
-                        json.dump(mblog, f, ensure_ascii=False, cls=MyEncoder, indent='    ')
+            with open(f'{user.id}.json', 'w', encoding='utf-8') as f:
+                json.dump(user, f, ensure_ascii=False, cls=MyEncoder, indent='    ')  #
 
 
 if __name__ == '__main__':
