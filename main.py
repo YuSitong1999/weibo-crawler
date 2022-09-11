@@ -82,7 +82,12 @@ class Mblog:
         self.picture_url_list = list[str]()
         for picture_id in mblog['pic_ids']:
             self.picture_id_list.append(picture_id)
-            self.picture_url_list.append(mblog['pic_infos'][picture_id]['largest']['url'])
+            url = mblog['pic_infos'][picture_id]['largest']['url']
+            self.picture_url_list.append(url)
+            response = requests.get(url, headers=headers)
+            os.makedirs('image', exist_ok=True)
+            with open(f'image{os.sep}{picture_id}.jpg', 'wb') as f:
+                f.write(response.content)
         # 附带文章
         self.has_article: bool = 'url_struct' in mblog
         if self.has_article:
