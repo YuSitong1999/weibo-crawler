@@ -29,3 +29,9 @@ https://weibo.com/ajax/statuses/longtext?id={微博字母id}
 示例
 
 https://weibo.com/ajax/statuses/longtext?id=LCzT6osOC
+
+## 获取关注者
+https://weibo.com/ajax/friendships/friends?page=1&uid=7772824758
+
+## 获取粉丝
+https://weibo.com/ajax/friendships/friends?relate=fans&page=1&uid=7772824758
