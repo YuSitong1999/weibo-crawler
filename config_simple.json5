@@ -1,0 +1,38 @@
+{
+  // 接口版本号（不是程序版本），以备接口不兼容升级时迁移
+  version: 1,
+  // 浏览器用户代理，一般不用修改
+  user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33',
+  // ！使用前需要访问weibo.com并登录后获取，详见README.md
+  cookie: '你的cookie',
+  // 获取多少页需要休息
+  page_sleep_count: 3,
+  // 休息的时长，秒
+  page_sleep_duration: 5,
+  // 抓取的用户ID
+  user_id_list: [
+    7772824758,
+  ],
+  // 获取用户微博
+  user_mblog: {
+    // 抓取微博的用户ID，在“抓取的用户ID”中才有效
+    id_list: [
+      7772824758,
+    ],
+    // 抓取的微博开始时间
+    since_data: '2022-09-01',
+  },
+  // 获取互关
+  user_mutual_follow: {
+    // 抓取互关的用户ID，在“抓取的用户ID”中才有效
+    id_list: [
+      7772824758,
+    ],
+    // 抓取互关的最小粉丝数
+    min_follower: 10000,
+    // 抓取每个人的最大互关数
+    max_mutual_follower: 1000,
+    // 包括间接互关（可能会用时非常长）
+    include_indirect: false,
+  },
+}

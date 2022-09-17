@@ -21,54 +21,13 @@
 
 ## 配置说明
 
-目前不支持配置中注释
-
-```json
-{
-  // 配置版本
-  "version": "0.0.0",
-  // 浏览器用户代理
-  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33",
-  // cookie，部分需要登陆后的
-  "cookie": "你的cookie",
-  // 获取页休息页数门槛
-  "page_sleep_count": 3,
-  // 获取页休息时间
-  "page_sleep_duration": 5,
-  // 获取信息的用户id列表
-  "user_id_list": [
-    7772824758
-  ],
-  // 获取微博配置
-  "user_mblog": {
-    // 获取微博的id列表(在user_id_list之中才有效)
-    "id_list": [
-      7772824758
-    ],
-    // 获取微博的开始日期
-    "since_data": "2022-09-01"
-  },
-  // 获取互关配置
-  "user_mutual_follow": {
-    // 获取互关的id列表(在user_id_list之中才有效)
-    "id_list": [
-      7772824758
-    ],
-    // 粉丝数门槛
-    "min_follower": 10000,
-    // 最大互关数
-    "max_mutual_follower": 1000,
-    // 是否包括间接互关
-    "include_indirect": false
-  }
-}
-```
+见[config_simple.json5](./config_simple.json5)
 
 ## 实现计划
 
 ### 功能
 
-- [ ] 配置文件使用JSON5
+- [x] 配置文件使用JSON5
 - [ ] 支持获取用户非互关的关注
 - [ ] 下载头条文章
 - [ ] 下载视频

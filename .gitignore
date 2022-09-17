@@ -2,7 +2,7 @@
 .idea
 
 # 实际使用的配置
-config.json
+config.json5
 
 # 输出数据
 output
