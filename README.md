@@ -10,6 +10,41 @@
 
 抓取用户互相关注的用户基本信息，可以包含间接互关，可以指定抓取用户粉丝门槛和数量上限。
 
+## 使用方法
+
+### 使用虚拟环境（推荐）
+
+```shell
+# 创建虚拟环境
+python -m venv ./venv
+# 进入虚拟环境
+.\venv\Scripts\activate
+```
+
+### 安装依赖
+
+```shell
+pip install -r requirements.txt
+```
+
+### 获取cookie
+
+访问[新浪微博网页版](https://www.weibo.com)，登录账号。
+
+之后后按F12显示“开发人员工具”，按F5刷新，按图中依次点击，找到cookie并复制。_**cookie务必保密**_
+
+![获取cookie](README/1.png)
+
+### 配置和运行
+
+首次运行将[config_simple.json5](./config_simple.json5)复制为[config.json5](./config.json5)
+
+配置[config.json5](./config.json5)后再次运行，将执行抓取
+
+```shell
+python main.py
+```
+
 ## 数据保存
 
 所有数据保存到 output以用户id命名的文件夹
