@@ -103,6 +103,11 @@ class Mblog:
         self.created_at: datetime.datetime = datetime.datetime.strptime(mblog['created_at'],
                                                                         '%a %b %d %X %z %Y')
 
+        # 是否被封号
+        self.is_forbidden = mblog['user'] is None
+        if self.is_forbidden:
+            return
+
         # 是否长微博
         self.is_long_text: bool = mblog['isLongText']
         if self.is_long_text:  # 部分需要登录
